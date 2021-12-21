@@ -80,7 +80,59 @@ def save(lst):
     stu_txt.close()
                 
 def search():
-    pass
+    student_query = [] # Create an empty list
+    while True:
+        id = ''   # '' is after one loop is completed, clear variables
+        name = ''
+        if os.path.exists(filename):
+            mode = input('Press 1 search by ID, press 2 search by name: ')
+            if mode == '1':
+                id = input('Please input ID: ')
+            elif mode == '2':
+                name = input('Please input student name: ')
+            else:
+                print('Your input is invalid, please repeat it.')
+                search()
+            with open(filename, 'r') as rfile:
+                student = rfile.readlines()
+                for item in student:
+                    d = dict(eval(item))   # Change from string to dictionary 
+                    if id != '':
+                        if d['id'] == id:
+                            student_query.append(d)
+                    elif name != '':
+                        if d['name'] == name:
+                            student_query.append(d)
+            # show the query result
+            show_student(student_query)
+            # empty list
+            student_query.clear()
+            answer = input('Want to query more? y/n: ')
+            if answer == 'y':
+                continue
+            else:
+                break                                   
+        else:
+            print('Not saved student information')
+            return
+           
+def show_student(lst):
+    if len(lst) == 0:
+        print('No student infomration, no data!')
+        return
+    #show format
+    format_title ='{:^6}\t{:^12}\t{:^8}\t{:^10}\t{:^10}\t{:^8}'    # ^ is center, ^6 means center, 6 width lenth, position of ID, name, English, Python, Java, and total
+    print(format_title.format('ID', 'Name', 'English score', 'Python score', 'Java score', 'Total score' ))
+    # define content format
+    format_data = '{:^6}\t{:^12}\t{:^8}\t{:^10}\t{:^8}\t{:^10}'    
+    for item in lst:
+        print(format_data.format(item.get('id'), 
+                                 item.get('name'), 
+                                 item.get('english'), 
+                                 item.get('python'), 
+                                 item.get('java'), 
+                                 int(item.get('english'))+ int(item.get('python'))+ int(item.get('java'))
+                                 ))        
 
 def delete():
     while True:
