@@ -115,8 +115,37 @@ def delete():
         else:
             break
                 
-def modify():
-    pass
+def modify():    
+    show()
+    if os.path.exists(filename):   # to see if the file is existed
+        with open(filename, 'r') as rfile:   # open file and read 
+            student_old = rfile.readlines()
+    else:
+        return
+
+    student_id = input("Please input student ID to modify: ")
+    with open(filename, 'w') as wfile: 
+        for item in student_old:
+            d = dict(eval(item))  #eval is to remove the '' format 
+            if d['id'] == student_id:
+                print("Found student information, you can modify its information.")
+                while True:
+                    try: 
+                        d['name'] = input('Please input name: ')
+                        d['english'] = input('please input English score: ')
+                        d['python'] = input('Please input Python score: ')
+                        d['java'] = input('Please input Java score: ')
+                    except:
+                        print('Ivalid, please input again!')
+                    else:
+                        break
+                wfile.write(str(d)+ '\n')
+                print("Your modification is done! ")
+            else:
+                wfile.write(str(d) + '\n')
+        answer = input('Do you want to modify other students information? y/n: ')
+        if answer == 'y' or answer =='Y':
+            modify()
 
 def sort():
     pass
