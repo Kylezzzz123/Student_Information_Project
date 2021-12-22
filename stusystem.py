@@ -122,7 +122,7 @@ def show_student(lst):
         return
     #show format
     format_title ='{:^6}\t{:^12}\t{:^8}\t{:^10}\t{:^10}\t{:^8}'    # ^ is center, ^6 means center, 6 width lenth, position of ID, name, English, Python, Java, and total
-    print(format_title.format('ID', 'Name', 'English score', 'Python score', 'Java score', 'Total score' ))
+    print(format_title.format('ID', 'Name', 'English score', 'Python score', 'Java score', 'Total score' ))   # we can write this: {:^6}.format('ID) if we don't have many items. 
     # define content format
     format_data = '{:^6}\t{:^12}\t{:^8}\t{:^10}\t{:^8}\t{:^10}'    
     for item in lst:
@@ -200,15 +200,61 @@ def modify():
             modify()
 
 def sort():
-    pass
+    show()
+    if os.path.exists(filename):
+        with open(filename, 'r') as rfile:
+            student_list = rfile.readlines()
+            student_new = []
+        for item in student_list:
+            d= dict(eval(item))
+            student_new.append(d)    
+    else:
+        return
+
+    asc_or_desc = input('please choose (1. asc  2. desc): ')
+    if asc_or_desc == '1':
+        asc_or_desc_bool = False
+    elif asc_or_desc == '2':
+        asc_or_desc_bool = True
+    else:
+        print('Invalid input, please repeat! ')
+        sort()
+    mode = input('Please choose sort type: 1. By English score  2. By Python score   3. By Java score   0. By Total score: ')
+    if mode == '1':
+        student_new.sort(key=lambda x : int(x['english']), reverse = asc_or_desc_bool )   # x:int(x[]) --> the x is dictionary, x can be anything
+    elif mode == '2':
+        student_new.sort(key=lambda x : int(x['python']), reverse = asc_or_desc_bool )   # x['key'] is to get the value from key in dictionary. 
+    elif mode == '3':
+        student_new.sort(key=lambda x : int(x['java']), reverse = asc_or_desc_bool )   # if reverse = asc_or_desc = False, it means no reverse, reverse is false
+    elif mode == '0':
+        student_new.sort(key=lambda x : int(x['english']) + int(x['python']) + int(x['java']), reverse = asc_or_desc_bool )
+    else:
+        print('Invalid input, please repeat!')
+        sort()
+    show_student(student_new)
 
 def total():
-    pass
+    if os.path.exists(filename):
+        with open(filename, 'r') as rfile:
+            students = rfile.readlines()
+            if students:
+                print(f'Total {len(students)} students')
+            else:
+                print('No data input!!')
+    else: 
+        print('No data!!!!')    
 
 def show():
-    pass
-
-
+    student_lst = []
+    if os.path.exists(filename):
+        with open(filename, 'r') as rfile:
+            students = rfile.readlines()
+            for item in students:
+                student_lst.append(eval(item))      # transform from string to dic, no need to add dict() if eval is added eval(item). 
+            if student_lst:
+                show_student(student_lst)
+    else:
+        print("No data saved!!!")
 
 
 if __name__ =='__main__':
